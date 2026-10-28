@@ -23,3 +23,6 @@
 .DS_Store
 /Artifacts/
 Assets/XR/APILayers~/
+/RuntimeActionBindings.json
+/Assets/StreamingAssets/RuntimeActionBindings.json
+/Assets/StreamingAssets/RuntimeActionBindings.json.meta
