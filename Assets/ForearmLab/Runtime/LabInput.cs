@@ -15,6 +15,7 @@ namespace ForearmLab
         bool wasPinching;
         bool wasConfirming;
         string pose = "Waiting for hand tracking";
+        public string PoseStatus => pose;
 
         public static Transform Bone(OVRSkeleton skeleton, OVRSkeleton.BoneId modern, OVRSkeleton.BoneId legacy)
         {

@@ -16,6 +16,7 @@ public static class LabSetup
 {
     const string XRScene = "Assets/Scenes/ForearmXR.unity";
     const string DesktopScene = "Assets/Scenes/GestureDesktop.unity";
+    const string GestureScene = "Assets/Scenes/GestureXR.unity";
 
     [MenuItem("Forearm Lab/Rebuild test scenes")]
     public static void Build()
@@ -23,8 +24,9 @@ public static class LabSetup
         if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Stop Play Mode before rebuilding the test scenes");
         Configure();
         CreateScene(false);
+        CreateScene(false, true);
         CreateScene(true);
-        EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(XRScene, true), new EditorBuildSettingsScene(DesktopScene, false) };
+        EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(XRScene, true), new EditorBuildSettingsScene(GestureScene, false), new EditorBuildSettingsScene(DesktopScene, false) };
         AssetDatabase.SaveAssets();
         VerifyRecognition();
         Debug.Log("FOREARM_LAB_SETUP_OK");
@@ -76,7 +78,7 @@ public static class LabSetup
         return (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(path));
     }
 
-    static void CreateScene(bool desktop)
+    static void CreateScene(bool desktop, bool gesture = false)
     {
         var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
         RenderSettings.ambientLight = new Color(.45f, .5f, .6f);
@@ -130,11 +132,13 @@ public static class LabSetup
         UnityEngine.Object.DestroyImmediate(preview.GetComponent<Collider>());
         anchor.preview = preview.transform;
         anchor.transform.position = new Vector3(-.2f, 1.15f, .5f);
+        if (gesture) GestureSceneSetup.AddDisplay();
+        else if (!desktop) UnityEngine.Object.DestroyImmediate(lab);
         foreach (var root in scene.GetRootGameObjects())
             foreach (var child in root.GetComponentsInChildren<Transform>(true))
                 if (GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(child.gameObject) != 0)
                     throw new Exception("Missing script in generated scene: " + child.name);
-        EditorSceneManager.SaveScene(scene, desktop ? DesktopScene : XRScene);
+        EditorSceneManager.SaveScene(scene, desktop ? DesktopScene : gesture ? GestureScene : XRScene);
     }
 
     [MenuItem("Forearm Lab/Open desktop lab")]

@@ -2,7 +2,7 @@
 
 Unity 6000.6.7f1, Meta XR SDK 207.0.1, Unity OpenXR 1.18.0, URP.
 
-A minimal starting point for wrist-to-elbow interfaces on Meta Quest. Includes an empty XR test environment, two tracked hands, world-space drawing, and the old HandTracking project's X/T/O/M gesture templates and $P recognizer. No deprecated project packages or spell effects were imported.
+A minimal starting point for wrist-to-elbow interfaces on Meta Quest. Includes separate forearm-interface and gesture XR test scenes, two tracked hands, world-space drawing, and the old HandTracking project's X/T/O/M gesture templates and $P recognizer. No deprecated project packages or spell effects were imported.
 
 ## Try it without a headset
 
@@ -18,7 +18,7 @@ Automatic recognition on release is optional and defaults off so multi-stroke X/
 
 Install the **standalone Meta XR Simulator 207.1 or newer** from [Meta's Windows download](https://developers.meta.com/vr/downloads/package/meta-xr-simulator-windows/). The old `com.meta.xr.simulator` Unity package is deprecated and conflicts with SDK 207; it has been removed.
 
-1. In Unity choose **Forearm Lab > Open Meta XR lab**.
+1. In Unity choose **Forearm Lab > Open Gesture XR lab** for drawing/recognition, or **Open Meta XR lab** for the separate forearm-interface foundation.
 2. Select **Window > Meta > Meta XR Simulator > Activate**. Press Play.
 3. In the simulator Inputs panel select **Meta Quest 3**, and set both left and right input to **Hand**.
 4. For webcam input, enable **Inputs > Camera tracking > Enable camera**. Wait for **Streaming** and put both hands within view. Desktop camera access must already be permitted in Windows.
@@ -30,7 +30,7 @@ Without webcam input, use the simulator's built-in hand poses and movement contr
 
 The signed 207.1 MSI is downloaded under the ignored `Artifacts` folder. Windows rejected its system registry registration without administrator privileges. Its files were extracted successfully to `Artifacts/SimulatorPortable/PFiles/MetaXRSimulator/v207.1`; Windows App Runtime dependencies were installed by the per-user attempt before rollback.
 
-To try that local extraction, launch `MetaXRSimulator.exe` from that folder, then choose **Forearm Lab > Simulator > Use local extracted runtime**, open the Meta XR lab and press Play. This sets OpenXR environment variables for the Unity editor process only. **Restore previous runtime** undoes that selection; restarting Unity also clears it. This optional path and its binaries are machine-local and are not included in the Git repository. For a fresh clone, use the official administrator installer above.
+To try that local extraction, launch `MetaXRSimulator.exe` from that folder, then choose **Forearm Lab > Simulator > Use local extracted runtime**, open the Gesture XR lab and press Play. This sets OpenXR environment variables for the Unity editor process only. **Restore previous runtime** undoes that selection; restarting Unity also clears it. This optional path and its binaries are machine-local and are not included in the Git repository. For a fresh clone, use the official administrator installer above.
 
 Webcam tracking arrives through normal XR hand data; this project does not run a second webcam/ML pipeline. Single-camera depth and occluded joints are estimates. Head rotation is tracked but head translation is not. [Meta camera tracking guide](https://developers.meta.com/vr/documentation/unity/xrsim-camera-tracking/) · [Simulator setup](https://developers.meta.com/vr/documentation/unity/xrsim-getting-started/)
 
@@ -42,11 +42,17 @@ Install Unity's Android Build Support, SDK/NDK and OpenJDK modules. Switch the b
 
 `Left forearm UI anchor (estimated)` follows the left wrist with configurable position and rotation offsets. Its small slab is a placement placeholder, not a wrapped or interactive interface. Adjust `ForearmAnchor.wristLocalOffset` and `rotationOffset` against actual tracking. Hand tracking alone does not provide a measured elbow. Future work: calibrated elbow/body tracking, curved UI surface, opposite-hand touch/pinch, and physical-device UX testing.
 
+## GestureXR inner-forearm display
+
+`GestureXR` contains the migrated drawing and detection logic. Its world-space TextMeshPro display sits on the palm-facing side of the left forearm, using wrist and finger-base joints to follow the palm orientation. It shows the right-hand state, drawing state, point count, and latest recognition result/score. Raise and turn your left palm toward you to read it. The display hides on lost left-hand tracking and returns on reacquisition; it does not float at a stale pose.
+
+Select `Left inner forearm detection display` to adjust `Distance From Wrist`, `Surface Offset`, and `Rotation Offset`. The arm position is estimated from the hand; no measured elbow is implied. In edit mode the panel is visible at a preview position for layout. `ForearmXR` retains the rig and interface placeholder without gesture drawing logic; `GestureDesktop` retains mouse tests.
+
 ## Recognition migration
 
 See [migration notes](Documentation/MIGRATION.md). Points are stored in 3D and projected to a view plane fixed at the first stroke, then compared using the original $P recognizer. This preserves the concept of spatial drawing recognized as a 2D symbol; it is not a volumetric 3D recognizer. The threshold defaults to the original 0.8. Imported templates need evaluation with fresh tracked drawings.
 
-**Forearm Lab > Rebuild test scenes** recreates both lab scenes and their settings; it replaces edits to those two scenes. **Verify recognition** checks the four template classes. Keep custom scenes under a different name before rebuilding.
+**Forearm Lab > Rebuild test scenes** recreates all three lab scenes and their settings; it replaces edits to those scenes. **Verify recognition** checks the four template classes. Keep custom scenes under a different name before rebuilding.
 
 Unity caches, logs, builds, simulator binaries, local credentials and user settings are excluded from Git. The old ZIP is read-only and is not part of this repository.
 

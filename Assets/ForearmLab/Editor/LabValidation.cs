@@ -27,7 +27,7 @@ public static class LabValidation
         if (File.Exists(Artifact("request-xr-test")) && !EditorApplication.isPlayingOrWillChangePlaymode)
         {
             File.Delete(Artifact("request-xr-test"));
-            LabSetup.OpenXR();
+            GestureSceneSetup.Open();
             LabSimulator.ActivateLocal();
             xrTesting = true; started = 0;
             EditorApplication.isPlaying = true;

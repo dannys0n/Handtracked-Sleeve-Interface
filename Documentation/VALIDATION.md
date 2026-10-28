@@ -17,3 +17,11 @@ Machine-local evidence is in `Artifacts/setup-result.txt`, `desktop-test-result.
 The SDK emits warnings for simulator capabilities and some unsupported controller binding paths. The XR display started despite these messages. Desktop audio falls back to the default audio device. No claim is made that every Meta SDK feature is supported by this simulator.
 
 Not verified: webcam camera permission/streaming, hand motion accuracy, new-user recognition accuracy, real Quest deployment, measured elbow tracking, or forearm interface usability. Webcam testing needs visible hands and optional OS permission; physical-device testing remains necessary.
+
+## GestureXR scene and inner-forearm detection display
+
+Added a dedicated `GestureXR` scene by duplicating the existing Meta rig and gesture setup, then removing the gesture logic from `ForearmXR`. `GestureDesktop` remains the mouse test scene. The new world-space TextMeshPro panel uses the left wrist and index/little finger bases to estimate the inner forearm direction. Its offsets are configurable; the elbow is not measured.
+
+Verified: new scripts compile; GestureXR has no missing scripts; imported M points produce `Recognized: M (1.00)` and that result appears in the panel text in a ticking Play Mode session. When left-hand tracking is unavailable, the canvas hides. Imported TMP essentials fixed the missing text shader. Render inspection caught and fixed UI text sizing and wrapping; the preview contains the detection status and controls within the panel bounds.
+
+Tracked palm alignment and reading comfort still need a headset/webcam check with the user's arm. The synthetic recognition and rendered preview do not establish physical placement accuracy.
