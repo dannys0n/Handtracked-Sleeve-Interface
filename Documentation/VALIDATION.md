@@ -20,8 +20,16 @@ Not verified: webcam camera permission/streaming, hand motion accuracy, new-user
 
 ## GestureXR scene and inner-forearm detection display
 
-Added a dedicated `GestureXR` scene by duplicating the existing Meta rig and gesture setup, then removing the gesture logic from `ForearmXR`. `GestureDesktop` remains the mouse test scene. The new world-space TextMeshPro panel uses the left wrist and index/little finger bases to estimate the inner forearm direction. Its offsets are configurable; the elbow is not measured.
+Added a dedicated `GestureXR` scene by duplicating the existing Meta rig and gesture setup, then removing the gesture logic from `ForearmXR`. `GestureDesktop` remains the mouse test scene. The world-space TextMeshPro panel uses a fixed offset in the actual left-wrist frame and palm axes for the active skeleton format. Its offsets are configurable; the elbow is not measured.
 
 Verified: new scripts compile; GestureXR has no missing scripts; imported M points produce `Recognized: M (1.00)` and that result appears in the panel text in a ticking Play Mode session. When left-hand tracking is unavailable, the canvas hides. Imported TMP essentials fixed the missing text shader. Render inspection caught and fixed UI text sizing and wrapping; the preview contains the detection status and controls within the panel bounds.
 
 Tracked palm alignment and reading comfort still need a headset/webcam check with the user's arm. The synthetic recognition and rendered preview do not establish physical placement accuracy.
+
+## Wrist anchoring correction
+
+Fixed the shared bone resolver accepting overlapping IDs from two skeleton formats: legacy wrist ID 0 could select OpenXR palm ID 0 instead of wrist ID 1. The resolver now selects the active skeleton convention before searching. This also corrects index-tip lookup used by drawing.
+
+Replaced finger-position cross products with a fixed wrist-local pose. OpenXR left-hand distal is +Z and palmar is -Y, per the installed Meta SDK constants; legacy left-hand directions are handled separately. The canvas front (-Z) faces palmar and text up follows distal. The display follows the persistent hand hierarchy and refreshes in LateUpdate and before rendering, avoiding a stale world transform after late rig updates.
+
+Verified compilation, 144 synthetic rotation checks for invariant wrist offset/palmar-facing front/text up across both skeleton conventions, and a joint-ID regression with initialized OpenXR bones and temporary validity flags restored immediately afterward. At the final live sample tracking was unavailable, so these checks do not establish physical-device stability or eliminate webcam tracking noise. Re-test with a tracked hand after this correction.

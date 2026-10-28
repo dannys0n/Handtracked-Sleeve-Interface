@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace ForearmLab
 {
-    // Left palm basis avoids depending on the different legacy/OpenXR wrist axes.
+    // Fixed pose in the tracked wrist frame; finger articulation must not move the UI.
+    [DefaultExecutionOrder(1000)]
     public class InnerForearmDetectionDisplay : MonoBehaviour
     {
         public OVRHand leftHand;
@@ -17,24 +18,41 @@ namespace ForearmLab
         public Vector3 rotationOffset;
         public bool TrackingAvailable { get; private set; }
 
+        void OnEnable() => Application.onBeforeRender += BeforeRender;
+        void OnDisable() => Application.onBeforeRender -= BeforeRender;
+
+        [BeforeRenderOrder(100)]
+        void BeforeRender() => FollowWrist();
+
         void LateUpdate()
         {
+            FollowWrist();
+            RefreshText();
+        }
+
+        public static Pose WristLocalPose(bool openXR, float distance, float clearance, Vector3 eulerOffset)
+        {
+            // Meta OpenXRHandPrimitives / OVRHandPrimitives: left distal and palmar.
+            var distal = openXR ? Vector3.forward : Vector3.left;
+            var palmar = openXR ? Vector3.down : Vector3.up;
+            return new Pose(-distal * distance + palmar * clearance,
+                Quaternion.LookRotation(-palmar, distal) * Quaternion.Euler(eulerOffset));
+        }
+
+        void FollowWrist()
+        {
             var wrist = LabInput.Bone(leftSkeleton, OVRSkeleton.BoneId.XRHand_Wrist, OVRSkeleton.BoneId.Hand_WristRoot);
-            var index = LabInput.Bone(leftSkeleton, OVRSkeleton.BoneId.XRHand_IndexMetacarpal, OVRSkeleton.BoneId.Hand_Index1);
-            var little = LabInput.Bone(leftSkeleton, OVRSkeleton.BoneId.XRHand_LittleMetacarpal, OVRSkeleton.BoneId.Hand_Pinky1);
-            TrackingAvailable = leftHand && leftHand.IsTracked && leftHand.IsDataValid && wrist && index && little;
+            TrackingAvailable = leftHand && leftHand.IsTracked && leftHand.IsDataValid && wrist;
             if (TrackingAvailable)
             {
-                var fingers = ((index.position + little.position) * .5f - wrist.position).normalized;
-                var across = (index.position - little.position).normalized;
-                var palmNormal = Vector3.Cross(fingers, across).normalized;
-                TrackingAvailable = palmNormal.sqrMagnitude > .5f;
-                if (TrackingAvailable)
-                    transform.SetPositionAndRotation(wrist.position - fingers * distanceFromWrist + palmNormal * surfaceOffset,
-                        Quaternion.LookRotation(-palmNormal, fingers) * Quaternion.Euler(rotationOffset));
+                // Follow the persistent hand hierarchy, including late rig updates.
+                // Do not parent to generated bones, which Meta can rebuild on reacquisition.
+                if (transform.parent != leftSkeleton.transform) transform.SetParent(leftSkeleton.transform, true);
+                var local = WristLocalPose(leftSkeleton.GetSkeletonType() == OVRSkeleton.SkeletonType.XRHandLeft,
+                    distanceFromWrist, surfaceOffset, rotationOffset);
+                transform.SetPositionAndRotation(wrist.position + wrist.rotation * local.position, wrist.rotation * local.rotation);
             }
             if (display) display.gameObject.SetActive(TrackingAvailable);
-            RefreshText();
         }
 
         public void RefreshText()

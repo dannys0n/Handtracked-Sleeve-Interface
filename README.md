@@ -44,7 +44,7 @@ Install Unity's Android Build Support, SDK/NDK and OpenJDK modules. Switch the b
 
 ## GestureXR inner-forearm display
 
-`GestureXR` contains the migrated drawing and detection logic. Its world-space TextMeshPro display sits on the palm-facing side of the left forearm, using wrist and finger-base joints to follow the palm orientation. It shows the right-hand state, drawing state, point count, and latest recognition result/score. Raise and turn your left palm toward you to read it. The display hides on lost left-hand tracking and returns on reacquisition; it does not float at a stale pose.
+`GestureXR` contains the migrated drawing and detection logic. Its world-space TextMeshPro display sits on the palm-facing side of the left forearm, using the tracked wrist pose and the palm axes for the active Meta skeleton format. It shows the right-hand state, drawing state, point count, and latest recognition result/score. Raise and turn your left palm toward you to read it. The display hides on lost left-hand tracking and returns on reacquisition; it does not float at a stale pose.
 
 Select `Left inner forearm detection display` to adjust `Distance From Wrist`, `Surface Offset`, and `Rotation Offset`. The arm position is estimated from the hand; no measured elbow is implied. In edit mode the panel is visible at a preview position for layout. `ForearmXR` retains the rig and interface placeholder without gesture drawing logic; `GestureDesktop` retains mouse tests.
 
