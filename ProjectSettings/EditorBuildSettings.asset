@@ -6,13 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/ForearmXR.unity
+    path: Assets/ForearmLab/Scenes/ForearmXR.unity
     guid: 4c1bf75faa7cefb44a7fe1217020c569
   - enabled: 0
-    path: Assets/Scenes/GestureDesktop.unity
+    path: Assets/GestureLab/Scenes/GestureDesktop.unity
     guid: a2d03a09c22d66b43ab5673ecfb65a58
   - enabled: 0
-    path: Assets/Scenes/GestureXR.unity
+    path: Assets/GestureLab/Scenes/GestureXR.unity
     guid: 2da90ae53a1dea047b73313a24525f3b
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

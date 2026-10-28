@@ -19,16 +19,7 @@ namespace ForearmLab
 
         public static Transform Bone(OVRSkeleton skeleton, OVRSkeleton.BoneId modern, OVRSkeleton.BoneId legacy)
         {
-            if (!skeleton || !skeleton.IsDataValid) return null;
-            // IDs overlap between skeleton formats (e.g. legacy wrist == OpenXR palm).
-            // Pick one convention before searching; never accept both in the same list.
-            var type = skeleton.GetSkeletonType();
-            bool openXR = type == OVRSkeleton.SkeletonType.XRHandLeft || type == OVRSkeleton.SkeletonType.XRHandRight;
-            if (!openXR && type != OVRSkeleton.SkeletonType.HandLeft && type != OVRSkeleton.SkeletonType.HandRight) return null;
-            var target = openXR ? modern : legacy;
-            foreach (var bone in skeleton.Bones)
-                if (bone.Id == target) return bone.Transform;
-            return null;
+            return HandJointLookup.Find(skeleton, modern, legacy);
         }
 
         void Update()

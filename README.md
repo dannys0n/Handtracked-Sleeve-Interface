@@ -4,6 +4,16 @@ Unity 6000.6.7f1, Meta XR SDK 207.0.1, Unity OpenXR 1.18.0, URP.
 
 A minimal starting point for wrist-to-elbow interfaces on Meta Quest. Includes separate forearm-interface and gesture XR test scenes, two tracked hands, world-space drawing, and the old HandTracking project's X/T/O/M gesture templates and $P recognizer. No deprecated project packages or spell effects were imported.
 
+## Asset organization
+
+- `Assets/ForearmLab/Scenes/ForearmXR.unity`: forearm interface scene; `ForearmLab/Runtime` contains its anchor.
+- `Assets/GestureLab/Scenes/`: GestureXR and GestureDesktop. GestureLab also owns drawing/input scripts, the inner-arm detection display, scene tools/checks, custom gesture Resources, and the imported $P recognizer under ThirdParty.
+- `Assets/SharedXR/`: common XR startup, simulator/setup editor tools, and skeleton-aware joint lookup. Existing C# namespaces are retained to avoid unrelated API/reference changes.
+
+Meta prefabs remain in Packages. TMP resources remain in their standard shared folder. Asset moves preserve Unity GUIDs; scene references and build/menu paths are updated.
+
+See [forearm tracking research](Documentation/FOREARM_TRACKING.md) for the distinction between wrist attachment and elbow-based forearm placement.
+
 ## Try it without a headset
 
 Open this folder in Unity Hub with **6000.6.7f1**. Let packages resolve and scripts compile.

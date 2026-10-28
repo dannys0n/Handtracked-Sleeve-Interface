@@ -14,9 +14,9 @@ using UnityEngine.XR.OpenXR;
 
 public static class LabSetup
 {
-    const string XRScene = "Assets/Scenes/ForearmXR.unity";
-    const string DesktopScene = "Assets/Scenes/GestureDesktop.unity";
-    const string GestureScene = "Assets/Scenes/GestureXR.unity";
+    const string XRScene = "Assets/ForearmLab/Scenes/ForearmXR.unity";
+    const string DesktopScene = "Assets/GestureLab/Scenes/GestureDesktop.unity";
+    const string GestureScene = "Assets/GestureLab/Scenes/GestureXR.unity";
 
     [MenuItem("Forearm Lab/Rebuild test scenes")]
     public static void Build()

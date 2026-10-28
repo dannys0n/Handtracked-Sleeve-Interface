@@ -8,7 +8,7 @@ using UnityEngine;
 
 public static class GestureSceneSetup
 {
-    public const string ScenePath = "Assets/Scenes/GestureXR.unity";
+    public const string ScenePath = "Assets/GestureLab/Scenes/GestureXR.unity";
 
     [MenuItem("Forearm Lab/Open Gesture XR lab")]
     public static void Open() => EditorSceneManager.OpenScene(ScenePath);
@@ -18,12 +18,12 @@ public static class GestureSceneSetup
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode) throw new InvalidOperationException("Stop Play Mode first");
         if (AssetDatabase.LoadAssetAtPath<SceneAsset>(ScenePath)) throw new InvalidOperationException("GestureXR already exists; open it instead of migrating again");
-        var source = EditorSceneManager.OpenScene("Assets/Scenes/ForearmXR.unity");
+        var source = EditorSceneManager.OpenScene("Assets/ForearmLab/Scenes/ForearmXR.unity");
         EditorSceneManager.SaveScene(source, ScenePath, true);
         var gesture = EditorSceneManager.OpenScene(ScenePath);
         AddDisplay();
         EditorSceneManager.SaveScene(gesture);
-        var forearm = EditorSceneManager.OpenScene("Assets/Scenes/ForearmXR.unity");
+        var forearm = EditorSceneManager.OpenScene("Assets/ForearmLab/Scenes/ForearmXR.unity");
         var drawing = UnityEngine.Object.FindAnyObjectByType<GestureDrawing>();
         if (drawing) UnityEngine.Object.DestroyImmediate(drawing.gameObject);
         EditorSceneManager.SaveScene(forearm);

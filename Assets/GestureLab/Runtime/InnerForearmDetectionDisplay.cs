@@ -41,7 +41,7 @@ namespace ForearmLab
 
         void FollowWrist()
         {
-            var wrist = LabInput.Bone(leftSkeleton, OVRSkeleton.BoneId.XRHand_Wrist, OVRSkeleton.BoneId.Hand_WristRoot);
+            var wrist = HandJointLookup.Find(leftSkeleton, OVRSkeleton.BoneId.XRHand_Wrist, OVRSkeleton.BoneId.Hand_WristRoot);
             TrackingAvailable = leftHand && leftHand.IsTracked && leftHand.IsDataValid && wrist;
             if (TrackingAvailable)
             {

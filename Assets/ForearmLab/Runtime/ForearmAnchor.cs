@@ -14,7 +14,7 @@ namespace ForearmLab
         void LateUpdate()
         {
             if (desktop) return;
-            var wrist = LabInput.Bone(leftSkeleton, OVRSkeleton.BoneId.XRHand_Wrist, OVRSkeleton.BoneId.Hand_WristRoot);
+            var wrist = HandJointLookup.Find(leftSkeleton, OVRSkeleton.BoneId.XRHand_Wrist, OVRSkeleton.BoneId.Hand_WristRoot);
             preview.gameObject.SetActive(wrist != null);
             if (!wrist) return;
             transform.SetPositionAndRotation(wrist.TransformPoint(wristLocalOffset), wrist.rotation * Quaternion.Euler(rotationOffset));
