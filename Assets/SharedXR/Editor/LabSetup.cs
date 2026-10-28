@@ -27,6 +27,8 @@ public static class LabSetup
         CreateScene(false, true);
         CreateScene(true);
         EditorBuildSettings.scenes = new[] { new EditorBuildSettingsScene(XRScene, true), new EditorBuildSettingsScene(GestureScene, false), new EditorBuildSettingsScene(DesktopScene, false) };
+        if (AssetDatabase.LoadAssetAtPath<SceneAsset>(GestureRecordingSceneSetup.ScenePath))
+            EditorBuildSettings.scenes = EditorBuildSettings.scenes.Concat(new[] { new EditorBuildSettingsScene(GestureRecordingSceneSetup.ScenePath, false) }).ToArray();
         AssetDatabase.SaveAssets();
         VerifyRecognition();
         Debug.Log("FOREARM_LAB_SETUP_OK");

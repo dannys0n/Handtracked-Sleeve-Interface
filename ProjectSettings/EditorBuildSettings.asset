@@ -14,6 +14,9 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/GestureLab/Scenes/GestureXR.unity
     guid: 2da90ae53a1dea047b73313a24525f3b
+  - enabled: 0
+    path: Assets/GestureLab/Scenes/GestureRecording.unity
+    guid: 54d9a86c34e635642a3f118cdb6e082c
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 03b25715c76cdb340b96d6c243b6e3dd, type: 2}

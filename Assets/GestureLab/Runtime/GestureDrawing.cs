@@ -30,10 +30,15 @@ namespace ForearmLab
 
         void Awake()
         {
-            foreach (var xml in Resources.LoadAll<TextAsset>("CustomGestures"))
-                templates.Add(GestureIO.ReadGestureFromXML(xml.text));
+            ReloadTemplates();
             ink = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
             ink.SetColor("_BaseColor", new Color(.2f, 1f, .85f));
+        }
+
+        public void ReloadTemplates()
+        {
+            templates.Clear();
+            foreach (var record in GestureRecordingStore.List()) templates.Add(record.gesture);
         }
 
         public void BeginStroke(Vector3 position)
@@ -83,8 +88,20 @@ namespace ForearmLab
         public void Recognize()
         {
             EndStroke();
-            if (points.Count < 4 || templates.Count == 0) { Status = "Draw a longer shape first"; return; }
-            var candidate = new Point[points.Count];
+            if (!TryGetRecordingPoints(out var candidate, out var error)) { Status = error; return; }
+            if (templates.Count == 0) { Status = "No recognition templates available"; return; }
+            var result = PointCloudRecognizer.Classify(new Gesture(candidate), templates.ToArray());
+            bool accepted = result.Score >= recognitionThreshold;
+            Status = $"{(accepted ? "Recognized" : "No match; closest")}: {result.GestureClass} ({result.Score:F2})";
+            Debug.Log(Status);
+            if (accepted) onRecognized.Invoke(result.GestureClass);
+        }
+
+        public bool TryGetRecordingPoints(out Point[] candidate, out string error)
+        {
+            candidate = null; error = "";
+            if (points.Count < 4) { error = "Draw a longer shape first"; return false; }
+            candidate = new Point[points.Count];
             var inverse = Quaternion.Inverse(projectionRotation);
             var bounds = new Bounds();
             for (int i = 0; i < points.Count; i++)
@@ -93,12 +110,8 @@ namespace ForearmLab
                 bounds.Encapsulate(new Vector3(p.x, p.y, 0));
                 candidate[i] = new Point(p.x, p.y, strokeIds[i]);
             }
-            if (Mathf.Max(bounds.size.x, bounds.size.y) < .01f) { Status = "Shape is too small in the drawing plane"; return; }
-            var result = PointCloudRecognizer.Classify(new Gesture(candidate), templates.ToArray());
-            bool accepted = result.Score >= recognitionThreshold;
-            Status = $"{(accepted ? "Recognized" : "No match; closest")}: {result.GestureClass} ({result.Score:F2})";
-            Debug.Log(Status);
-            if (accepted) onRecognized.Invoke(result.GestureClass);
+            if (Mathf.Max(bounds.size.x, bounds.size.y) < .01f) { error = "Shape is too small in the drawing plane"; return false; }
+            return true;
         }
 
         public void Clear()

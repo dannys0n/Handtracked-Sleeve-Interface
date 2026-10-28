@@ -12,6 +12,9 @@ namespace ForearmLab
         public OVRSkeleton rightSkeleton;
         public float desktopDepth = .7f;
         public bool recognizeOnRelease;
+        public bool showOverlay = true;
+        public RectTransform desktopDrawArea;
+        bool desktopStrokeAllowed;
         bool wasPinching;
         bool wasConfirming;
         string pose = "Waiting for hand tracking";
@@ -24,8 +27,10 @@ namespace ForearmLab
 
         void Update()
         {
+            var events = UnityEngine.EventSystems.EventSystem.current;
+            bool editingName = events && events.currentSelectedGameObject && events.currentSelectedGameObject.GetComponent<TMPro.TMP_InputField>();
             var kb = Keyboard.current;
-            if (kb != null)
+            if (kb != null && !editingName)
             {
                 if (kb.cKey.wasPressedThisFrame) { drawing.Clear(); wasPinching = false; }
                 if (kb.enterKey.wasPressedThisFrame) drawing.Recognize();
@@ -34,11 +39,17 @@ namespace ForearmLab
             bool pinching = false;
             if (desktop && Mouse.current != null)
             {
-                desktopDepth = Mathf.Clamp(desktopDepth + Mouse.current.scroll.ReadValue().y * .0005f, .25f, 2);
                 var mouse = Mouse.current.position.ReadValue();
+                bool inside = desktopDrawArea ? RectTransformUtility.RectangleContainsScreenPoint(desktopDrawArea, mouse) : !(mouse.x < 440 && mouse.y > Screen.height - 230);
+                if (inside) desktopDepth = Mathf.Clamp(desktopDepth + Mouse.current.scroll.ReadValue().y * .0005f, .25f, 2);
+                if (Mouse.current.leftButton.wasPressedThisFrame)
+                    // The recording scene has an explicit drawing region. EventSystem's
+                    // cached pointer target can still describe the previous frame's sidebar.
+                    desktopStrokeAllowed = inside && (desktopDrawArea || !events || !events.IsPointerOverGameObject());
+                if (!Mouse.current.leftButton.isPressed) desktopStrokeAllowed = false;
                 position = drawing.view.ScreenToWorldPoint(new Vector3(mouse.x, mouse.y, desktopDepth));
                 // Leave the controls overlay clickable without producing ink.
-                pinching = Mouse.current.leftButton.isPressed && !(mouse.x < 440 && mouse.y > Screen.height - 230);
+                pinching = Mouse.current.leftButton.isPressed && desktopStrokeAllowed && inside;
                 pose = "Desktop mouse";
             }
             else if (!desktop)
@@ -73,6 +84,7 @@ namespace ForearmLab
 
         void OnGUI()
         {
+            if (!showOverlay) return;
             GUILayout.BeginArea(new Rect(12, 12, 420, 210), GUI.skin.box);
             GUILayout.Label("FOREARM LAB  /  " + (desktop ? "DESKTOP" : "META XR"));
             GUILayout.Label(pose);

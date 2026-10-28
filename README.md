@@ -12,8 +12,6 @@ A minimal starting point for wrist-to-elbow interfaces on Meta Quest. Includes s
 
 Meta prefabs remain in Packages. TMP resources remain in their standard shared folder. Asset moves preserve Unity GUIDs; scene references and build/menu paths are updated.
 
-See [forearm tracking research](Documentation/FOREARM_TRACKING.md) for the distinction between wrist attachment and elbow-based forearm placement.
-
 ## Try it without a headset
 
 Open this folder in Unity Hub with **6000.6.7f1**. Let packages resolve and scripts compile.
@@ -23,6 +21,12 @@ Open this folder in Unity Hub with **6000.6.7f1**. Let packages resolve and scri
 3. Draw X, T, O or M. Release between strokes; press **Enter** to recognize the entire drawing, **C** to clear. Buttons are also available in the Game view.
 
 Automatic recognition on release is optional and defaults off so multi-stroke X/T remain possible. Ink remains visible after recognition. `GestureDrawing.onRecognized` exposes accepted names for future interface actions. Scores are similarity scores, not calibrated probabilities.
+
+## Desktop gesture recording
+
+Choose **Gesture Lab > Open recording scene**, or open `Assets/GestureLab/Scenes/GestureRecording.unity`, then press Play. Hold the left mouse button inside the left drawing area; release between strokes. Enter a name and click **Save sample**. **Clear drawing** starts another sample; **Test recognition** compares the ink with the available templates. Enter and C also recognize/clear while the name field is not selected.
+
+The right-hand list scrolls vertically with the mouse wheel or scrollbar. It lists every gesture XML in `Assets/GestureLab/Resources/CustomGestures`, including X/T/O/M. Save adds an XML asset to that same folder, and each **Delete** button removes its XML asset and Unity metadata. Multiple samples can share a name. All gesture lab scenes use this shared library; saving/deleting refreshes recognition immediately in the recorder. Record in Unity Play Mode: player builds load the packaged Resources library for recognition, while editing the project library requires the Unity Editor. New recordings are project assets available to Git and subsequent builds.
 
 ## Meta XR Simulator and webcam
 
@@ -60,10 +64,8 @@ Select `Left inner forearm detection display` to adjust `Distance From Wrist`, `
 
 ## Recognition migration
 
-See [migration notes](Documentation/MIGRATION.md). Points are stored in 3D and projected to a view plane fixed at the first stroke, then compared using the original $P recognizer. This preserves the concept of spatial drawing recognized as a 2D symbol; it is not a volumetric 3D recognizer. The threshold defaults to the original 0.8. Imported templates need evaluation with fresh tracked drawings.
+Points are stored in 3D and projected to a view plane fixed at the first stroke, then compared using the original $P recognizer. This preserves the concept of spatial drawing recognized as a 2D symbol; it is not a volumetric 3D recognizer. The threshold defaults to the original 0.8. Imported templates need evaluation with fresh tracked drawings.
 
 **Forearm Lab > Rebuild test scenes** recreates all three lab scenes and their settings; it replaces edits to those scenes. **Verify recognition** checks the four template classes. Keep custom scenes under a different name before rebuilding.
 
 Unity caches, logs, builds, simulator binaries, local credentials and user settings are excluded from Git. The old ZIP is read-only and is not part of this repository.
-
-See [validation results](Documentation/VALIDATION.md) for the checks that passed and the remaining device/webcam checks.
