@@ -21,16 +21,48 @@ namespace ForearmLab
         [Min(.1f)] public float transitionSpeed = 3;
         public float CurrentExplosion { get; private set; }
         SleeveElement[] elements;
+        SleeveElement focusedElement;
+        Vector2Int focusedSpan;
+        public SleeveElement FocusedElement => focusedElement;
+        public event System.Action<SleeveElement> FocusChanged;
+
+        public void Focus(SleeveElement element)
+        {
+            if(!element||element.isEmptyPlaceholder||!element.isActiveAndEnabled||element.GetComponentInParent<SleeveGridLayout>()!=this)return;
+            focusedElement=element;focusedSpan=new Vector2Int(Mathf.Max(1,columns),Mathf.Max(1,rows));Layout();FocusChanged?.Invoke(focusedElement);
+        }
+        public void ClearFocus(){focusedElement=null;Layout();FocusChanged?.Invoke(null);}
+        public void ToggleFocus(SleeveElement element){if(focusedElement==element)ClearFocus();else Focus(element);}
+        // Gesture adapters can request grid spans without owning layout or modifying prefab defaults.
+        public void ResizeFocusedElement(int columnSpan,int rowSpan)
+        {
+            if(!focusedElement)return;
+            focusedSpan=new Vector2Int(Mathf.Clamp(columnSpan,1,Mathf.Max(1,columns)),Mathf.Clamp(rowSpan,1,Mathf.Max(1,rows)));Layout();
+        }
 
         void OnEnable() { Refresh(); Application.onBeforeRender += Layout; }
         void OnDisable()
         {
+            focusedElement=null;
             Application.onBeforeRender -= Layout;
             if (elements != null) foreach(var element in elements) if(element) element.SetVisible(true);
         }
         void OnTransformChildrenChanged() => Refresh();
         void OnTransformParentChanged() { if(!sleeve) sleeve=GetComponentInParent<WristSleeve>(); }
         public void Refresh() { elements=GetComponentsInChildren<SleeveElement>(true); if(!sleeve) sleeve=GetComponentInParent<WristSleeve>(); }
+        public SleeveElement AddElement(SleeveElement prefab,int column,int row,int columnSpan=1,int rowSpan=1)
+        {
+            var element=Instantiate(prefab,transform,false);
+            element.column=column;element.row=row;element.columnSpan=columnSpan;element.rowSpan=rowSpan;
+            Refresh();Layout();return element;
+        }
+        public void RemoveElement(SleeveElement element)
+        {
+            if(!element||element.GetComponentInParent<SleeveGridLayout>()!=this||element.isEmptyPlaceholder)return;
+            element.gameObject.SetActive(false);
+            if(Application.isPlaying)Destroy(element.gameObject);else DestroyImmediate(element.gameObject);
+            Refresh();Layout();
+        }
         void LateUpdate()
         {
             Layout();
@@ -51,15 +83,34 @@ namespace ForearmLab
             if(!sleeve) sleeve=GetComponentInParent<WristSleeve>();
             if(!sleeve) return;
             if(elements==null) Refresh();
+            if(focusedElement&&(!focusedElement.isActiveAndEnabled||focusedElement.GetComponentInParent<SleeveGridLayout>()!=this))
+            {focusedElement=null;FocusChanged?.Invoke(null);}
             CurrentExplosion=explosion;
             int cols=Mathf.Max(1,columns), rowCount=Mathf.Max(1,rows);
             float circumference=Mathf.Max(.005f,sleeve.radius)*Mathf.PI*2;
             float visibleLength=Mathf.Max(.001f,sleeve.VisibleLength);
+            bool hasContent=false;
+            foreach(var e in elements)if(e&&!e.isEmptyPlaceholder&&e.isActiveAndEnabled){hasContent=true;break;}
             foreach(var element in elements)
             {
                 if(!element) continue;
+                if(element.isEmptyPlaceholder)
+                {
+                    bool show=!hasContent;
+                    if(element.gameObject.activeSelf!=show)element.gameObject.SetActive(show);
+                    if(!show)continue;
+                }
+                else if(!element.isActiveAndEnabled)continue;
+                if(focusedElement&&focusedElement!=element){element.SetVisible(false);continue;}
                 float col=Mathf.Clamp(element.column,0,cols-1), row=Mathf.Clamp(element.row,0,rowCount-1);
                 float w=Mathf.Clamp(element.columnSpan,1,cols-col),h=Mathf.Clamp(element.rowSpan,1,rowCount-row);
+                if(focusedElement==element)
+                {
+                    float angularCenter=col+w*.5f;
+                    w=Mathf.Clamp(focusedSpan.x,1,cols);h=Mathf.Clamp(focusedSpan.y,1,rowCount);
+                    // Keep the current angular centre; the content grows around its existing location.
+                    col=angularCenter-w*.5f;row=Mathf.Clamp(row+element.rowSpan*.5f-h*.5f,0,rowCount-h);
+                }
                 float uStart=(centerAngle+scrollAngle-arcDegrees*.5f)/360;
                 float cellAngle=arcDegrees/360/cols;
                 float angularGap=Mathf.Min(gap/circumference,cellAngle*.35f);
@@ -69,6 +120,7 @@ namespace ForearmLab
                 float u1=uStart+(col+w)*cellAngle-angularGap*.5f;
                 float v0=endMargin+row*cellHeight+axialGap*.5f;
                 float v1=endMargin+(row+h)*cellHeight-axialGap*.5f;
+                if(element.isEmptyPlaceholder){u0=uStart;u1=uStart+arcDegrees/360;v0=0;v1=1;}
                 u1=Mathf.Max(u0+.001f,u1);v1=Mathf.Max(v0+.001f,v1);
                 float lift=surfaceOffset+element.radialLift+CurrentExplosion*explodeDistance*element.explosionWeight;
                 float shift=((row+h*.5f)-rowCount*.5f)*explodeRowGap*CurrentExplosion;

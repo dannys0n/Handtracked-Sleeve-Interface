@@ -9,6 +9,14 @@ namespace ForearmLab
         [Min(0)] public int column,row;
         [Min(1)] public int columnSpan=1,rowSpan=1;
         public float radialLift;
+        [Tooltip("Fallback surface shown only when the grid has no active content elements.")]
+        public bool isEmptyPlaceholder;
+        [Tooltip("Normal uGUI children belong here. Use anchors/layout groups inside this rectangle.")]
+        public RectTransform contentRoot;
+        public WristSleeve Sleeve { get; private set; }
+        public Vector4 Region { get; private set; }
+        public float Lift { get; private set; }
+        public float AxialShift { get; private set; }
         [Min(0)] public float explosionWeight=1;
         public Canvas panel;
         public SleeveTileGraphic plate;
@@ -64,6 +72,7 @@ namespace ForearmLab
 
         public void Apply(WristSleeve sleeve,Vector4 region,float lift,float shift,Vector2 size,float exploded,bool debugLines=false)
         {
+            Sleeve=sleeve;Region=region;Lift=lift;AxialShift=shift;
             if(dirty||renderers==null)
             {
                 renderers=GetComponentsInChildren<Renderer>(true);rendererDefaults=new bool[renderers.Length];

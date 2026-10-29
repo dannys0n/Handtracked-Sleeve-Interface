@@ -1,0 +1,185 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2010222399530845690
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7968665461671636611}
+  - component: {fileID: 3962016762918098033}
+  - component: {fileID: 5671047100796673193}
+  - component: {fileID: 4802765088303111839}
+  m_Layer: 0
+  m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7968665461671636611
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2010222399530845690}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8847192066672141296}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0.3}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &3962016762918098033
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2010222399530845690}
+  m_CullTransparentMesh: 1
+--- !u!114 &5671047100796673193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2010222399530845690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
+  m_Material: {fileID: 2100000, guid: 42a3d5fc4dc23814999b4c2b1ae39ef5, type: 2}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 2800000, guid: d106c85d2adabde45864233bb4c92b09, type: 2}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!114 &4802765088303111839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2010222399530845690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bff098be0bd06484cb2de291ff6bf0bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ForearmLab.SleeveContentProjection
+  element: {fileID: 3046776385366373568}
+--- !u!1001 &130576217933592868
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6389058728377126363, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_Name
+      value: SleeveImage
+      objectReference: {fileID: 0}
+    - target: {fileID: 8478701031987744126, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8478701031987744126, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8478701031987744126, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8478701031987744126, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8478701031987744126, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8478701031987744126, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8478701031987744126, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8478701031987744126, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8478701031987744126, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8478701031987744126, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 8865454818679724756, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7968665461671636611}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6389058728377126363, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8879913783703429908}
+  m_SourcePrefab: {fileID: 100100000, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+--- !u!114 &3046776385366373568 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3136674239034428900, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+  m_PrefabInstance: {fileID: 130576217933592868}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6441723551762134271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 961f6762527abb242b56d3231898492e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ForearmLab.SleeveElement
+--- !u!1 &6441723551762134271 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6389058728377126363, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+  m_PrefabInstance: {fileID: 130576217933592868}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8879913783703429908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6441723551762134271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f43ade32de95d234da3b9954a17c10f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ForearmLab.SleeveImageContent
+  image: {fileID: 5671047100796673193}
+--- !u!224 &8847192066672141296 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8865454818679724756, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+  m_PrefabInstance: {fileID: 130576217933592868}
+  m_PrefabAsset: {fileID: 0}
