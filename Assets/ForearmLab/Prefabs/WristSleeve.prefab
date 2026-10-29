@@ -141,6 +141,7 @@ MonoBehaviour:
   radius: 0.03
   length: 0.22
   fitLengthToElbow: 1
+  showDebugCylinder: 0
   closeAmount: 0
   collapseThreshold: 0.75
   wristRotationOffset: {x: 180, y: 0, z: 0}

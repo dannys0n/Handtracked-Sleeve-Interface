@@ -17,7 +17,7 @@ namespace ForearmLab
         public float length = .22f;
         public bool fitLengthToElbow = true;
         [Tooltip("Draw the cylinder as a debug guide. Does not affect tracking, layout, or projected content.")]
-        public bool showDebugCylinder = true;
+        public bool showDebugCylinder;
         [UnityEngine.Serialization.FormerlySerializedAs("rollAmount")]
         [Range(0, 1), Tooltip("Presentation-only closing animation. Does not resize the workspace or reflow its grid.")]
         public float closeAmount;
