@@ -136,6 +136,7 @@ public static class LabSetup
         anchor.transform.position = new Vector3(-.2f, 1.15f, .5f);
         if (gesture) GestureSceneSetup.AddDisplay();
         else if (!desktop) UnityEngine.Object.DestroyImmediate(lab);
+        if (!desktop && !gesture) { SleevePrefabSetup.AddToScene(); EnvironmentModeSetup.AddToScene(); SleeveContentSetup.AddToScene(); }
         foreach (var root in scene.GetRootGameObjects())
             foreach (var child in root.GetComponentsInChildren<Transform>(true))
                 if (GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(child.gameObject) != 0)

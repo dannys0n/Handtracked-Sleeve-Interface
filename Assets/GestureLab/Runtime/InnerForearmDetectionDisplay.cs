@@ -9,6 +9,11 @@ namespace ForearmLab
     {
         public OVRHand leftHand;
         public OVRSkeleton leftSkeleton;
+        [Tooltip("Optional wrist transform. When empty, follows the Meta left wrist joint.")]
+        public Transform wristAnchor;
+        [Tooltip("Optional elbow transform. Leave empty for wrist-only simulation.")]
+        public Transform elbowAnchor;
+        public bool openXRWristAxes = true;
         public GestureDrawing drawing;
         public LabInput input;
         public Canvas display;
@@ -17,6 +22,7 @@ namespace ForearmLab
         [Range(.01f, .1f)] public float surfaceOffset = .035f;
         public Vector3 rotationOffset;
         public bool TrackingAvailable { get; private set; }
+        Transform metaWrist;
 
         void OnEnable() => Application.onBeforeRender += BeforeRender;
         void OnDisable() => Application.onBeforeRender -= BeforeRender;
@@ -41,16 +47,24 @@ namespace ForearmLab
 
         void FollowWrist()
         {
-            var wrist = HandJointLookup.Find(leftSkeleton, OVRSkeleton.BoneId.XRHand_Wrist, OVRSkeleton.BoneId.Hand_WristRoot);
-            TrackingAvailable = leftHand && leftHand.IsTracked && leftHand.IsDataValid && wrist;
+            bool useMetaWrist = !wristAnchor || wristAnchor == metaWrist;
+            if (useMetaWrist)
+            {
+                metaWrist = HandJointLookup.Find(leftSkeleton, OVRSkeleton.BoneId.XRHand_Wrist, OVRSkeleton.BoneId.Hand_WristRoot);
+                wristAnchor = metaWrist;
+            }
+            var wrist = wristAnchor;
+            TrackingAvailable = wrist && (!useMetaWrist || (leftHand && leftHand.IsTracked && leftHand.IsDataValid));
             if (TrackingAvailable)
             {
                 // Follow the persistent hand hierarchy, including late rig updates.
                 // Do not parent to generated bones, which Meta can rebuild on reacquisition.
-                if (transform.parent != leftSkeleton.transform) transform.SetParent(leftSkeleton.transform, true);
-                var local = WristLocalPose(leftSkeleton.GetSkeletonType() == OVRSkeleton.SkeletonType.XRHandLeft,
+                if (useMetaWrist && transform.parent != leftSkeleton.transform) transform.SetParent(leftSkeleton.transform, true);
+                bool openXR = useMetaWrist ? leftSkeleton.GetSkeletonType() == OVRSkeleton.SkeletonType.XRHandLeft : openXRWristAxes;
+                var local = WristLocalPose(openXR,
                     distanceFromWrist, surfaceOffset, rotationOffset);
-                transform.SetPositionAndRotation(wrist.position + wrist.rotation * local.position, wrist.rotation * local.rotation);
+                var rotation = ForearmAnchor.AttachmentRotation(wrist, elbowAnchor, openXR);
+                transform.SetPositionAndRotation(wrist.position + rotation * local.position, rotation * local.rotation);
             }
             if (display) display.gameObject.SetActive(TrackingAvailable);
         }
