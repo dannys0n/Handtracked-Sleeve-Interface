@@ -432,25 +432,64 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8865454818679724756, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8865454818679724756, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8865454818679724756, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 8865454818679724756, guid: 8aca719c57413f344b6d21d791754517, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4851561051122989447}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6389058728377126363, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5957148671956864080}
   m_SourcePrefab: {fileID: 100100000, guid: 8aca719c57413f344b6d21d791754517, type: 3}
 --- !u!224 &1863148913252011641 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8865454818679724756, guid: 8aca719c57413f344b6d21d791754517, type: 3}
   m_PrefabInstance: {fileID: 7121123667410719917}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &4213450805688375670 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6389058728377126363, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+  m_PrefabInstance: {fileID: 7121123667410719917}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5957148671956864080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4213450805688375670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6ea5870a53189c45aef7ef34739c5f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ForearmLab.SleevePressable
+  element: {fileID: 5284099660206610761}
+  control: {fileID: 8735678918619853659}
+  touchInput: {fileID: 0}
+  restHeight: 0.003
+  pressTravel: 0.002
+  activationTravel: 0.0015
+  returnSpeed: 0.04
 --- !u!114 &5284099660206610761 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3136674239034428900, guid: 8aca719c57413f344b6d21d791754517, type: 3}
   m_PrefabInstance: {fileID: 7121123667410719917}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 4213450805688375670}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 961f6762527abb242b56d3231898492e, type: 3}

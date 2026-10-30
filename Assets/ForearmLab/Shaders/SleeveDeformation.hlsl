@@ -5,7 +5,8 @@ float4x4 _ProjectorWorldToLocal;
 float4x4 _ProjectorLocalToWorld;
 float _ProjectorLength;
 float _CloseAmount;
-float _CollapseThreshold;
+float _FoldedCuffLength;
+float _SleeveDetached;
 
 float2 SleeveRing(float column)
 {
@@ -35,16 +36,15 @@ float3 SleeveDeformLocal(float3 position)
     float faceting=smoothstep(0,.28,saturate(_CloseAmount));
     position.xy=lerp(position.xy,folded*radius,faceting);
     float closing=smoothstep(0,1,saturate(_CloseAmount));
-    position.z=lerp(position.z,_ProjectorLength-(1-t)*_ProjectorLength*.045,closing);
-    // Presentation collapse after the chosen fold threshold. No opacity/state blend.
-    // Every layer converges on the same elbow-end point at closeAmount == 1.
-    float remaining=1-smoothstep(clamp(_CollapseThreshold,0,.99),1,saturate(_CloseAmount));
-    position=lerp(float3(0,0,_ProjectorLength),position,remaining);
+    // Fold into a visible cuff without collapsing the radius or fading content.
+    float cuffLength=clamp(_FoldedCuffLength,.005,_ProjectorLength);
+    position.z=lerp(position.z,_ProjectorLength-(1-t)*cuffLength,closing);
     return position;
 }
 
 float3 SleeveDeformWorld(float3 worldPosition)
 {
+    if(_SleeveDetached>.5)return worldPosition;
     float3 local=mul(_ProjectorWorldToLocal,float4(worldPosition,1)).xyz;
     return mul(_ProjectorLocalToWorld,float4(SleeveDeformLocal(local),1)).xyz;
 }

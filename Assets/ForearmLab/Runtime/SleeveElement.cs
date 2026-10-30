@@ -17,6 +17,8 @@ namespace ForearmLab
         public Vector4 Region { get; private set; }
         public float Lift { get; private set; }
         public float AxialShift { get; private set; }
+        public float BaseLift { get; private set; }
+        [System.NonSerialized] public float pressOffset;
         [Min(0)] public float explosionWeight=1;
         public Canvas panel;
         public SleeveTileGraphic plate;
@@ -72,7 +74,7 @@ namespace ForearmLab
 
         public void Apply(WristSleeve sleeve,Vector4 region,float lift,float shift,Vector2 size,float exploded,bool debugLines=false)
         {
-            Sleeve=sleeve;Region=region;Lift=lift;AxialShift=shift;
+            Sleeve=sleeve;Region=region;Lift=lift;BaseLift=lift-pressOffset;AxialShift=shift;
             if(dirty||renderers==null)
             {
                 renderers=GetComponentsInChildren<Renderer>(true);rendererDefaults=new bool[renderers.Length];

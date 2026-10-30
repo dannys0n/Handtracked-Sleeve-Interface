@@ -14,6 +14,7 @@ namespace ForearmLab
         [Range(0, 1)] public float recognitionThreshold = .8f;
         public float minimumPointDistance = .004f;
         public int maximumPoints = 4096;
+        public Color inkColor = new Color(.2f,1f,.85f);
         public UnityEvent<string> onRecognized = new UnityEvent<string>();
         public string Status { get; private set; } = "Draw X, T, O or M; then Recognize";
         public int PointCount => points.Count;
@@ -32,7 +33,7 @@ namespace ForearmLab
         {
             ReloadTemplates();
             ink = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-            ink.SetColor("_BaseColor", new Color(.2f, 1f, .85f));
+            ink.SetColor("_BaseColor", inkColor);
         }
 
         public void ReloadTemplates()

@@ -8,6 +8,8 @@ public static class LabSceneMenus
     public static void OpenDesktop()=>Open("Assets/GestureLab/Scenes/GestureDesktop.unity");
     [MenuItem("Forearm Lab/Open Meta XR lab")]
     public static void OpenXR()=>Open("Assets/ForearmLab/Scenes/ForearmXR.unity");
+    [MenuItem("Forearm Lab/Open showcase")]
+    public static void OpenShowcase()=>Open("Assets/ForearmLab/Scenes/ForearmShowcase.unity");
     [MenuItem("Forearm Lab/Open Gesture XR lab")]
     public static void OpenGestureXR()=>Open("Assets/GestureLab/Scenes/GestureXR.unity");
     [MenuItem("Gesture Lab/Open recording scene")]

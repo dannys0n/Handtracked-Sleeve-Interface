@@ -11,6 +11,8 @@ namespace ForearmLab
         public float centerAngle = 90;
         [Tooltip("Circumferential content scroll in degrees, independent of the sleeve anchor.")]
         public float scrollAngle;
+        [Min(0), Tooltip("Gain for hand scrolling and the desktop scroll dial.")]
+        public float scrollSensitivity = 3;
         [Range(0,.3f)] public float endMargin = .06f;
         [Min(0)] public float surfaceOffset = .004f;
         [Min(0)] public float gap = .003f;
@@ -23,15 +25,17 @@ namespace ForearmLab
         SleeveElement[] elements;
         SleeveElement focusedElement;
         Vector2Int focusedSpan;
+        float? focusedAngle;
         public SleeveElement FocusedElement => focusedElement;
         public event System.Action<SleeveElement> FocusChanged;
 
         public void Focus(SleeveElement element)
         {
             if(!element||element.isEmptyPlaceholder||!element.isActiveAndEnabled||element.GetComponentInParent<SleeveGridLayout>()!=this)return;
-            focusedElement=element;focusedSpan=new Vector2Int(Mathf.Max(1,columns),Mathf.Max(1,rows));Layout();FocusChanged?.Invoke(focusedElement);
+            focusedElement=element;focusedAngle=null;focusedSpan=new Vector2Int(Mathf.Max(1,columns),Mathf.Max(1,rows));Layout();FocusChanged?.Invoke(focusedElement);
         }
-        public void ClearFocus(){focusedElement=null;Layout();FocusChanged?.Invoke(null);}
+        public void ClearFocus(){focusedElement=null;focusedAngle=null;Layout();FocusChanged?.Invoke(null);}
+        public void AimFocusedElement(float angle){if(!focusedElement)return;focusedAngle=angle;Layout();}
         public void ToggleFocus(SleeveElement element){if(focusedElement==element)ClearFocus();else Focus(element);}
         // Gesture adapters can request grid spans without owning layout or modifying prefab defaults.
         public void ResizeFocusedElement(int columnSpan,int rowSpan)
@@ -72,7 +76,7 @@ namespace ForearmLab
 
         public void ScrollByDegrees(float delta)
         {
-            scrollAngle=Mathf.Repeat(scrollAngle+delta,360);
+            scrollAngle=Mathf.Repeat(scrollAngle+delta*scrollSensitivity,360);
             Layout();
         }
         public void ResetScroll() { scrollAngle=0;Layout(); }
@@ -118,11 +122,16 @@ namespace ForearmLab
                 float axialGap=Mathf.Min(gap/visibleLength,cellHeight*.35f);
                 float u0=uStart+col*cellAngle+angularGap*.5f;
                 float u1=uStart+(col+w)*cellAngle-angularGap*.5f;
+                if(focusedElement==element&&focusedAngle.HasValue)
+                {
+                    float offset=focusedAngle.Value/360-(u0+u1)*.5f;
+                    u0+=offset;u1+=offset;
+                }
                 float v0=endMargin+row*cellHeight+axialGap*.5f;
                 float v1=endMargin+(row+h)*cellHeight-axialGap*.5f;
                 if(element.isEmptyPlaceholder){u0=uStart;u1=uStart+arcDegrees/360;v0=0;v1=1;}
                 u1=Mathf.Max(u0+.001f,u1);v1=Mathf.Max(v0+.001f,v1);
-                float lift=surfaceOffset+element.radialLift+CurrentExplosion*explodeDistance*element.explosionWeight;
+                float lift=surfaceOffset+element.radialLift+CurrentExplosion*explodeDistance*element.explosionWeight+element.pressOffset;
                 float shift=((row+h*.5f)-rowCount*.5f)*explodeRowGap*CurrentExplosion;
                 var center=sleeve.SampleSurface((u0+u1)*.5f,(v0+v1)*.5f,lift);
                 var pos=center.position+Vector3.forward*shift;

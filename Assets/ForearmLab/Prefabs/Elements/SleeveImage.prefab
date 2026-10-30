@@ -148,6 +148,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6389058728377126363, guid: 8aca719c57413f344b6d21d791754517, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8879913783703429908}
+    - targetCorrespondingSourceObject: {fileID: 6389058728377126363, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3440826408530735158}
   m_SourcePrefab: {fileID: 100100000, guid: 8aca719c57413f344b6d21d791754517, type: 3}
 --- !u!114 &3046776385366373568 stripped
 MonoBehaviour:
@@ -178,6 +181,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ForearmLab.SleeveImageContent
   image: {fileID: 5671047100796673193}
+--- !u!114 &3440826408530735158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6441723551762134271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a1c75353de7969468dae3850b859b0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ForearmLab.SleeveImageInsertion
+  content: {fileID: 8879913783703429908}
+  element: {fileID: 3046776385366373568}
+  slotMaterial: {fileID: 2100000, guid: 560c8111cc7ac3142a7659ad430aa2b5, type: 2}
+  recessMaterial: {fileID: 2100000, guid: 605877b52c24ded4ca20d920d03299af, type: 2}
+  leftGrab: {fileID: 0}
+  rightGrab: {fileID: 0}
+  leftVisual: {fileID: 0}
+  rightVisual: {fileID: 0}
+  approachDistance: 0.16
+  contactDistance: 0.012
+  releaseDistance: 0.06
+  slotWidth: 0.012
+  finishDuration: 0.25
 --- !u!224 &8847192066672141296 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8865454818679724756, guid: 8aca719c57413f344b6d21d791754517, type: 3}

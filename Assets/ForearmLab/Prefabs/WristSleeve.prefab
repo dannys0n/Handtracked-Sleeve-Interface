@@ -143,7 +143,10 @@ MonoBehaviour:
   fitLengthToElbow: 1
   showDebugCylinder: 0
   closeAmount: 0
-  collapseThreshold: 0.75
+  rollUpThreshold: 0.75
+  rollDownThreshold: 0.25
+  foldedCuffLength: 0.025
+  rollAssistDuration: 0.25
   wristRotationOffset: {x: 180, y: 0, z: 0}
   surface: {fileID: 3177683395838326282}
 --- !u!1001 &8217483545861106109

@@ -11,6 +11,16 @@ namespace ForearmLab
         public PokeInteractable interactable;
         public Transform Transform => element&&element.Sleeve?element.Sleeve.transform:transform;
         CylinderBacking backing;
+        SleevePressable pressable;
+        float InteractionRadius
+        {
+            get
+            {
+                if(!pressable)pressable=element?element.GetComponent<SleevePressable>():null;
+                return element.Sleeve.radius+(pressable&&pressable.UsesRaisedFace?
+                    element.BaseLift+pressable.ActivationOffset:element.Lift);
+            }
+        }
         public ISurface BackingSurface => backing??(backing=new CylinderBacking(this));
         sealed class CylinderBacking : ISurface
         {
@@ -35,6 +45,15 @@ namespace ForearmLab
             return new Vector2((UnwrappedU(local)-(rect.x+rect.z)*.5f)*2*Mathf.PI*radius*1000,
                 -((local.z-element.AxialShift)/element.Sleeve.EffectiveLength-(rect.y+rect.w)*.5f)*element.Sleeve.EffectiveLength*1000);
         }
+        public Vector3 CanvasToWorld(Vector2 point,float offset=0)
+        {
+            var sleeve=element.Sleeve;var rect=element.Region;
+            float radius=Mathf.Max(.005f,sleeve.radius)+element.Lift;
+            float u=(rect.x+rect.z)*.5f+point.x*.001f/(2*Mathf.PI*radius);
+            float v=(rect.y+rect.w)*.5f-point.y*.001f/sleeve.EffectiveLength;
+            return sleeve.transform.TransformPoint(sleeve.SampleSurface(u,v,element.Lift+offset).position+
+                Vector3.forward*element.AxialShift);
+        }
         public bool ClosestSurfacePoint(in Vector3 point,out SurfaceHit hit,float maxDistance=0)
             =>Closest(point,out hit,maxDistance,true);
         bool Closest(Vector3 point,out SurfaceHit hit,float maxDistance,bool bounded)
@@ -43,7 +62,7 @@ namespace ForearmLab
             var local=Transform.InverseTransformPoint(point);var rect=element.Region;
             float u=UnwrappedU(local),v=(local.z-element.AxialShift)/element.Sleeve.EffectiveLength;
             if(bounded){u=Mathf.Clamp(u,rect.x,rect.z);v=Mathf.Clamp(v,rect.y,rect.w);}
-            float radius=element.Sleeve.radius+element.Lift;
+            float radius=InteractionRadius;
             var p=new Vector3(Mathf.Cos(u*2*Mathf.PI)*radius,Mathf.Sin(u*2*Mathf.PI)*radius,v*element.Sleeve.EffectiveLength+element.AxialShift);
             return Hit(point,p,out hit,maxDistance);
         }
@@ -59,7 +78,7 @@ namespace ForearmLab
         {
             hit=default;if(!Ready)return false;
             var o=Transform.InverseTransformPoint(ray.origin);var d=Transform.InverseTransformVector(ray.direction);
-            float radius=element.Sleeve.radius+element.Lift;
+            float radius=InteractionRadius;
             float a=d.x*d.x+d.y*d.y,b=2*(o.x*d.x+o.y*d.y),c=o.x*o.x+o.y*o.y-radius*radius;
             float disc=b*b-4*a*c;if(a<.000001f||disc<0)return false;
             for(int i=0;i<2;i++)

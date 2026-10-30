@@ -7,6 +7,8 @@ namespace ForearmLab
     public class SleeveDemoControls : MonoBehaviour
     {
         public SleeveGridLayout grid;
+        public MetaBodyDebugView bodyDebug;
+        public SleeveContactHandLock contactHandLock;
         Texture2D dialTexture;
         float previousDialAngle;
         int activeDialControl;
@@ -22,20 +24,36 @@ namespace ForearmLab
             if(!grid)return;
             if((Keyboard.current!=null&&Keyboard.current.f6Key.wasPressedThisFrame)||
                 (OVRPlugin.initialized&&OVRInput.GetDown(OVRInput.Button.Two,OVRInput.Controller.RTouch)))grid.ToggleExploded();
+            if(bodyDebug&&((Keyboard.current!=null&&Keyboard.current.f7Key.wasPressedThisFrame)||
+                (OVRPlugin.initialized&&OVRInput.GetDown(OVRInput.Button.One,OVRInput.Controller.LTouch))))bodyDebug.Toggle();
         }
         void OnGUI()
         {
             if(!grid||!grid.sleeve)return;
-            GUILayout.BeginArea(new Rect(12,Screen.height-302,430,290),GUI.skin.box);
+            GUILayout.BeginArea(new Rect(12,Screen.height-428,430,416),GUI.skin.box);
             GUILayout.Label("SLEEVE CONTENT  |  F6 / right controller B");
             GUILayout.Label($"Projection distance: {grid.explodeDistance*100:F1} cm");
             grid.explodeDistance=GUILayout.HorizontalSlider(grid.explodeDistance,0,.2f);
             if(GUILayout.Button(grid.explosion>.5f?"Near surface":"Project outward"))grid.ToggleExploded();
             grid.showDebugLines=GUILayout.Toggle(grid.showDebugLines,"Show debug projection lines");
             grid.sleeve.showDebugCylinder=GUILayout.Toggle(grid.sleeve.showDebugCylinder,"Show debug cylinder");
-            GUILayout.Label("Close / reopen (diamond fold)");grid.sleeve.closeAmount=GUILayout.HorizontalSlider(grid.sleeve.closeAmount,0,1);
-            GUILayout.Label($"Collapse threshold: {grid.sleeve.collapseThreshold:P0} folded");
-            grid.sleeve.collapseThreshold=GUILayout.HorizontalSlider(grid.sleeve.collapseThreshold,0,.99f);
+            if(contactHandLock)
+            {
+                contactHandLock.showContactGuides=GUILayout.Toggle(contactHandLock.showContactGuides,"Show cuff + left-hand contact guides");
+                GUILayout.Label(contactHandLock.Status);
+            }
+            if(bodyDebug)
+            {
+                bodyDebug.showDebugBody=GUILayout.Toggle(bodyDebug.showDebugBody,"Debug body  |  F7 / left controller X");
+                GUILayout.Label(bodyDebug.Status);
+            }
+            GUILayout.Label("Close / reopen (diamond fold)");
+            float fold=GUILayout.HorizontalSlider(grid.sleeve.closeAmount,0,1);
+            if(fold!=grid.sleeve.closeAmount)grid.sleeve.SetRollAmount(fold);
+            GUILayout.Label($"Roll up assist: {grid.sleeve.rollUpThreshold:P0} folded");
+            grid.sleeve.rollUpThreshold=GUILayout.HorizontalSlider(grid.sleeve.rollUpThreshold,grid.sleeve.rollDownThreshold+.01f,1);
+            GUILayout.Label($"Roll down assist: {grid.sleeve.rollDownThreshold:P0} folded");
+            grid.sleeve.rollDownThreshold=GUILayout.HorizontalSlider(grid.sleeve.rollDownThreshold,0,grid.sleeve.rollUpThreshold-.01f);
             GUILayout.Label($"Radius: {grid.sleeve.radius*100:F1} cm / Length: {grid.sleeve.length*100:F1} cm");
             grid.sleeve.radius=GUILayout.HorizontalSlider(grid.sleeve.radius,.025f,.075f);
             grid.sleeve.length=GUILayout.HorizontalSlider(grid.sleeve.length,.12f,.35f);

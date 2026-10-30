@@ -5,6 +5,8 @@ Shader "ForearmLab/Projected SDF Text"
         _MainTex("Font Atlas",2D)="white"{}
         _FaceColor("Face",Color)=(1,1,1,1)
         _FaceDilate("Dilate",Range(-1,1))=0
+        [HideInInspector]_OutlineWidth("Outline Width",Range(0,1))=0
+        [HideInInspector]_OutlineSoftness("Outline Softness",Range(0,1))=0
         _GradientScale("Gradient Scale",Float)=5
         _TextureWidth("Atlas Width",Float)=1024
         _TextureHeight("Atlas Height",Float)=1024

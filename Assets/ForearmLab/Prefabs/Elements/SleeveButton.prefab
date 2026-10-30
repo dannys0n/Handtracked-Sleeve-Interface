@@ -338,6 +338,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8865454818679724756, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8865454818679724756, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8865454818679724756, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8919400394150154328, guid: 8aca719c57413f344b6d21d791754517, type: 3}
       propertyPath: m_Colors.m_FadeDuration
       value: 0.05
@@ -432,19 +444,46 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8865454818679724756, guid: 8aca719c57413f344b6d21d791754517, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7454707400547669463}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6389058728377126363, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5202245533000127473}
   m_SourcePrefab: {fileID: 100100000, guid: 8aca719c57413f344b6d21d791754517, type: 3}
 --- !u!114 &4299367707332079152 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3136674239034428900, guid: 8aca719c57413f344b6d21d791754517, type: 3}
   m_PrefabInstance: {fileID: 1165826183134471124}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 5226330252071104015}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 961f6762527abb242b56d3231898492e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ForearmLab.SleeveElement
+--- !u!1 &5226330252071104015 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6389058728377126363, guid: 8aca719c57413f344b6d21d791754517, type: 3}
+  m_PrefabInstance: {fileID: 1165826183134471124}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5202245533000127473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5226330252071104015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6ea5870a53189c45aef7ef34739c5f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ForearmLab.SleevePressable
+  element: {fileID: 4299367707332079152}
+  control: {fileID: 6580074732545962902}
+  touchInput: {fileID: 0}
+  restHeight: 0.003
+  pressTravel: 0.002
+  activationTravel: 0.0015
+  returnSpeed: 0.04
 --- !u!224 &7720775680391805184 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8865454818679724756, guid: 8aca719c57413f344b6d21d791754517, type: 3}

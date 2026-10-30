@@ -21,8 +21,29 @@ namespace ForearmLab
         [UnityEngine.Serialization.FormerlySerializedAs("rollAmount")]
         [Range(0, 1), Tooltip("Presentation-only closing animation. Does not resize the workspace or reflow its grid.")]
         public float closeAmount;
-        [Range(0, .99f), Tooltip("Fold amount at which the whole presentation starts shrinking to zero. Fully closed is invisible.")]
-        public float collapseThreshold = .75f;
+        [UnityEngine.Serialization.FormerlySerializedAs("collapseThreshold")]
+        [Range(.01f, 1), Tooltip("Cross this while closing to finish rolling up.")]
+        public float rollUpThreshold = .75f;
+        [Range(0, .99f), Tooltip("Cross this while opening to finish rolling down.")]
+        public float rollDownThreshold = .25f;
+        [Min(.005f)] public float foldedCuffLength = .025f;
+        [Min(.01f)] public float rollAssistDuration = .25f;
+        public bool IsRollAssisting { get; private set; }
+        float rollAssistTarget;
+        public float CuffEdgeZ => (EffectiveLength - Mathf.Min(foldedCuffLength, EffectiveLength)) *
+            Mathf.SmoothStep(0, 1, Mathf.Clamp01(closeAmount));
+
+        // Thresholds assist the interaction; they never remap or scale its fold input.
+        public void SetRollAmount(float amount)
+        {
+            IsRollAssisting = false;
+            float previous = closeAmount;
+            closeAmount = Mathf.Clamp01(amount);
+            if (closeAmount > previous && previous < rollUpThreshold && closeAmount >= rollUpThreshold)
+            { rollAssistTarget = 1; IsRollAssisting = true; }
+            else if (closeAmount < previous && previous > rollDownThreshold && closeAmount <= rollDownThreshold)
+            { rollAssistTarget = 0; IsRollAssisting = true; }
+        }
         [Tooltip("Aligns the sleeve to the wrist input convention. Default points the tube back along the arm.")]
         public Vector3 wristRotationOffset = new Vector3(180, 0, 0);
         [SerializeField, HideInInspector] Transform surface;
@@ -45,7 +66,7 @@ namespace ForearmLab
             projectionBlock.SetMatrix("_ProjectorLocalToWorld",transform.localToWorldMatrix);
             projectionBlock.SetFloat("_ProjectorLength",EffectiveLength);
             projectionBlock.SetFloat("_CloseAmount",Mathf.Clamp01(closeAmount));
-            projectionBlock.SetFloat("_CollapseThreshold",Mathf.Clamp(collapseThreshold,0,.99f));
+            projectionBlock.SetFloat("_FoldedCuffLength",foldedCuffLength);
             renderer.SetPropertyBlock(projectionBlock);
         }
 
@@ -63,7 +84,7 @@ namespace ForearmLab
             material.SetMatrix("_ProjectorLocalToWorld",transform.localToWorldMatrix);
             material.SetFloat("_ProjectorLength",EffectiveLength);
             material.SetFloat("_CloseAmount",Mathf.Clamp01(closeAmount));
-            material.SetFloat("_CollapseThreshold",Mathf.Clamp(collapseThreshold,0,.99f));
+            material.SetFloat("_FoldedCuffLength",foldedCuffLength);
         }
         void OnDestroy()
         {
@@ -88,8 +109,21 @@ namespace ForearmLab
         }
 
         void OnDisable() => Application.onBeforeRender -= UpdateSleeve;
-        void LateUpdate() => UpdateSleeve();
-        void OnValidate() { radius = Mathf.Max(.005f, radius); length = Mathf.Max(.02f, length); }
+        void LateUpdate()
+        {
+            if (Application.isPlaying && IsRollAssisting)
+            {
+                closeAmount = Mathf.MoveTowards(closeAmount, rollAssistTarget,
+                    Time.unscaledDeltaTime / Mathf.Max(.01f, rollAssistDuration));
+                if (closeAmount == rollAssistTarget) IsRollAssisting = false;
+            }
+            UpdateSleeve();
+        }
+        void OnValidate()
+        {
+            radius = Mathf.Max(.005f, radius); length = Mathf.Max(.02f, length);
+            rollDownThreshold = Mathf.Min(rollDownThreshold, rollUpThreshold - .01f);
+        }
 
         [BeforeRenderOrder(100)]
         public void UpdateSleeve()
@@ -137,7 +171,7 @@ namespace ForearmLab
                 surfaceProperties.SetMatrix("_ProjectorWorldToLocal",transform.worldToLocalMatrix);
                 surfaceProperties.SetMatrix("_ProjectorLocalToWorld",transform.localToWorldMatrix);
                 surfaceProperties.SetFloat("_ProjectorLength",EffectiveLength);
-                surfaceProperties.SetFloat("_CollapseThreshold",Mathf.Clamp(collapseThreshold,0,.99f));
+                surfaceProperties.SetFloat("_FoldedCuffLength",foldedCuffLength);
                 surfaceRenderer.SetPropertyBlock(surfaceProperties);
             }
             foreach(var material in projectionMaterials.Values)if(material)UpdateMaterial(material);
