@@ -1,13 +1,10 @@
 # Forearm Gesture Lab
 
-**A wearable spatial interface for Meta Quest, controlled with your hands.**
+**A wearable spatial interface for wearables, controlled with your hands.**
 
 Forearm Gesture Lab explores the space between the wrist and elbow as a personal workspace in VR and mixed reality. A flexible interface wraps around the left forearm, placing controls, images, and interactive objects within reach of the opposite hand.
 
-The goal is to explore familiar physical actions—touching, scrolling, grasping, and rolling a sleeve—as ways to manage spatial interfaces. This is an experimental Unity prototype focused on interaction design and reusable XR components.
-
-<!-- Replace this placeholder with a hero GIF or image. -->
-> **Showcase preview** · GIF / image placeholder
+The goal is to explore familiar physical actions—touching, scrolling, grasping, and rolling a sleeve—as ways to manage spatial interfaces. Trying to expand upon ways to interface when wearables such as smart glasses use no controllers
 
 ## Interaction showcase
 
