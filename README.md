@@ -17,8 +17,7 @@ Drag around the cuff with two fingers to browse elements across the sleeve’s f
 
 **Potential use:** browse tools, media, or shortcuts without filling the surrounding space with floating panels.
 
-<!-- Add the sleeve scrolling GIF here. -->
-> **Scrolling demo** · GIF / image placeholder
+![Two-finger scrolling around the forearm sleeve](docs/gifs/scroll-demo.gif)
 
 ### Roll the workspace away
 
@@ -26,8 +25,7 @@ Grasp the cuff and move along the forearm to fold the interface closed or reopen
 
 **Potential use:** put controls away when they are no longer needed, with a physical cue for bringing them back.
 
-<!-- Add the sleeve rolling GIF here. -->
-> **Rolling demo** · GIF / image placeholder
+![Rolling the sleeve closed and reopening it](docs/gifs/roll-demo.gif)
 
 ### Touch buttons and toggles
 
@@ -44,8 +42,15 @@ The volume slider runs along the forearm, from elbow toward wrist. During intera
 
 **Potential use:** adjust volume or other continuous values without opening a separate settings window.
 
-<!-- Add the slider interaction GIF here. -->
-> **Slider demo** · GIF / image placeholder
+![Adjusting the forearm slider with a tracked finger](docs/gifs/slider-demo.gif)
+
+### Grab a 3D hologram
+
+Grab the cube directly from the sleeve and move it in space. Releasing it eases it back to its place on the moving arm.
+
+**Potential use:** pull an object out of a compact tool palette for closer inspection, then return it without managing another window.
+
+![Grabbing a hologram from the sleeve and releasing it back into place](docs/gifs/interactable-element-demo.gif)
 
 ### Capture, resize, and store an image
 
@@ -55,8 +60,7 @@ Bringing the card near the sleeve opens a narrow storage slot that turns toward 
 
 **Potential use:** collect visual references in a personal workspace, then retrieve them as part of a larger spatial workflow.
 
-<!-- Add the end-to-end capture, resize, and insertion GIF here. -->
-> **Image workflow demo** · GIF / image placeholder
+![Framing a scene capture and manipulating the captured image](docs/gifs/img-capture-demo.gif)
 
 ### Draw and recognize gestures
 
@@ -66,8 +70,7 @@ The prototype recognizes X, T, O, and M using a shared template library. Drawing
 
 **Potential use:** sketch a reference or explore drawn symbols as shortcuts for interface actions.
 
-<!-- Add the drawing and recognition GIF here. -->
-> **Drawing demo** · GIF / image placeholder
+![Drawing in space and recognizing the gesture](docs/gifs/draw-demo.gif)
 
 ## Technical focus
 
