@@ -1,6 +1,6 @@
 # Forearm Gesture Lab
 
-**A wearable spatial interface for wearables, controlled with your hands.**
+**Expoloring a wearable spatial interface for headsets and smart glasses, controlled with your hands.**
 
 Forearm Gesture Lab explores the space between the wrist and elbow as a personal workspace in VR and mixed reality. A flexible interface wraps around the left forearm, placing controls, images, and interactive objects within reach of the opposite hand.
 
